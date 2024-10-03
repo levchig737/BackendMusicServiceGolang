@@ -1,0 +1,196 @@
+basePath: /api
+definitions:
+  models.Song:
+    description: Song model
+    properties:
+      group:
+        type: string
+      id:
+        type: integer
+      link:
+        type: string
+      releaseDate:
+        type: string
+      text:
+        type: string
+      title:
+        type: string
+    type: object
+  models.SongInput:
+    properties:
+      group:
+        type: string
+      song:
+        type: string
+    required:
+    - group
+    - song
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+    url: http://www.example.com/support
+  description: API для управления музыкой
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://example.com/terms/
+  title: Music API
+  version: "1.0"
+paths:
+  /songs:
+    get:
+      description: Retrieve a list of songs with optional filters
+      parameters:
+      - description: Filter by group
+        in: query
+        name: group
+        type: string
+      - description: Filter by title
+        in: query
+        name: title
+        type: string
+      - description: Filter by text
+        in: query
+        name: text
+        type: string
+      - description: Limit of results
+        in: query
+        name: limit
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Song'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get all songs
+    post:
+      consumes:
+      - application/json
+      description: Add a new song with the specified group and title
+      parameters:
+      - description: Song info
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.SongInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Add a new song
+  /songs/{id}:
+    delete:
+      description: Delete a song by its ID
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete a song
+    put:
+      consumes:
+      - application/json
+      description: Update a song's details
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated song info
+        in: body
+        name: song
+        required: true
+        schema:
+          $ref: '#/definitions/models.Song'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Song'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update a song
+  /songs/{id}/text:
+    get:
+      description: Get the text of a song with pagination
+      parameters:
+      - description: Song ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Verses per page
+        in: query
+        name: versesPerPage
+        type: integer
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get song text by verses
+schemes:
+- http
+swagger: "2.0"

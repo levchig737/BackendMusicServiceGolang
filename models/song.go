@@ -2,11 +2,18 @@ package models
 
 import "time"
 
+// Song represents a song entity.
+// @Description Song model
 type Song struct {
-	ID          uint      `gorm:"primaryKey"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
 	Group       string    `json:"group"`
-	Title       string    `json:"song"`
+	Title       string    `json:"title"`
 	ReleaseDate time.Time `json:"releaseDate"`
-	Lyrics      string    `json:"lyrics"`
+	Text        string    `json:"text"`
 	Link        string    `json:"link"`
+}
+
+type SongInput struct {
+	Group string `json:"group" binding:"required"`
+	Song  string `json:"song" binding:"required"`
 }
